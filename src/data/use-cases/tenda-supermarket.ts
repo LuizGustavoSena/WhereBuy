@@ -5,7 +5,7 @@ import { GetProductProps } from "@src/domain/models/tenda";
 import { ISupermarket } from "@src/domain/use-cases";
 import { HttpClient } from "../protocols/http";
 
-export default class TendaSupermarket implements ISupermarket {
+export class TendaSupermarket implements ISupermarket {
     constructor(
         private httpClient: HttpClient
     ) { };
@@ -13,7 +13,7 @@ export default class TendaSupermarket implements ISupermarket {
     async getProductByName(name: string): Promise<Product[]> {
         try {
             const response = await this.httpClient.request<GetProductProps>({
-                method: "get",
+                method: 'get',
                 url: `https://api.tendaatacado.com.br/api/public/store/search?query=${name}`,
             });
 
