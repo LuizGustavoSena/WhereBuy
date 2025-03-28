@@ -1,8 +1,8 @@
-// import { faker } from '@faker-js/faker/.';
 import { faker } from '@faker-js/faker';
 import { TendaSupermarket } from "@src/data/use-cases";
+import { mockGetProducts } from '@test/domain/mocks/tenda';
 import { describe, expect, test } from 'vitest';
-import { HttpClientSpy } from "../protocols/http/mock-http-client";
+import { HttpClientSpy } from "../protocols/http";
 
 type Props = {
     sut: TendaSupermarket;
@@ -27,5 +27,19 @@ describe('TendaSupermarket', () => {
 
         expect(httpClient.url).toBe(`https://api.tendaatacado.com.br/api/public/store/search?query=${product}`);
         expect(httpClient.method).toBe('get');
+    });
+
+    test('Should be successful getProducts', async() => {
+        const { sut, httpClient } = makeSut();
+
+        const mock = mockGetProducts();
+
+        httpClient.response.body = mock;
+
+        const response = await sut.getProductByName(faker.commerce.productName());
+
+        expect(response[0].name).toBe(mock.products[0].name);
+        expect(response[0].price).toBe(mock.products[0].price);
+        expect(response[0].urlPhoto).toBe(mock.products[0].thumbnail);
     });
 });
