@@ -1,5 +1,7 @@
 import { faker } from '@faker-js/faker';
+import { HttpStatusCode } from '@src/data/protocols/http';
 import { TendaSupermarket } from "@src/data/use-cases";
+import { GetProductsError } from '@src/domain/errors';
 import { mockGetProducts } from '@test/domain/mocks/tenda';
 import { describe, expect, test } from 'vitest';
 import { HttpClientSpy } from "../protocols/http";
@@ -41,5 +43,17 @@ describe('TendaSupermarket', () => {
         expect(response[0].name).toBe(mock.products[0].name);
         expect(response[0].price).toBe(mock.products[0].price);
         expect(response[0].urlPhoto).toBe(mock.products[0].thumbnail);
+    });
+
+    test('Should be error when getProducts', async() => {
+        const { sut, httpClient } = makeSut();
+
+        const mock = mockGetProducts();
+
+        httpClient.response.statusCode = HttpStatusCode.ServerError;
+
+        const promise = sut.getProductByName(faker.commerce.productName());
+
+        await expect(promise).rejects.toThrow(new GetProductsError('Tenda'));
     });
 });
