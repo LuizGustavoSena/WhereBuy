@@ -1,7 +1,7 @@
-import { HttpClient, HttpRequest, HttpResponse } from "@src/data/protocols/http";
+import { HttpRequest, HttpResponse, IHttpClient } from "@src/data/protocols/http";
 import axios, { AxiosResponse } from "axios";
 
-export class AxiosHttpClient implements HttpClient {
+export class AxiosHttpClient implements IHttpClient {
     async request(params: HttpRequest): Promise<HttpResponse<any>> {
         const { method, url, body, headers } = params;
         let response: AxiosResponse;

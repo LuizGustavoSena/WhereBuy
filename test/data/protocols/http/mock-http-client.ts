@@ -1,6 +1,6 @@
-import { HttpClient, HttpRequest, HttpResponse, HttpStatusCode } from "@src/data/protocols/http";
+import { HttpRequest, HttpResponse, HttpStatusCode, IHttpClient } from "@src/data/protocols/http";
 
-export class HttpClientSpy<T = any> implements HttpClient {
+export class HttpClientSpy<T = any> implements IHttpClient {
     url?: string;
     method?: string;
     body?: any;

@@ -3,11 +3,11 @@ import { GetProductsError } from "@src/domain/errors";
 import { Product } from "@src/domain/models";
 import { GetProductProps } from "@src/domain/models/tenda";
 import { ISupermarket } from "@src/domain/use-cases";
-import { HttpClient, HttpStatusCode } from "../protocols/http";
+import { HttpStatusCode, IHttpClient } from "../protocols/http";
 
 export class TendaSupermarket implements ISupermarket {
     constructor(
-        private httpClient: HttpClient
+        private httpClient: IHttpClient
     ) { };
 
     async getProductByName(name: string): Promise<Product[]> {
