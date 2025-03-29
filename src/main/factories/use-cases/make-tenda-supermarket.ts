@@ -1,4 +1,4 @@
-import TendaSupermarket from "@src/data/use-cases/tenda-supermarket";
+import { TendaSupermarket } from "@src/data/use-cases/tenda-supermarket";
 import { ISupermarket } from "@src/domain/use-cases";
 import { MakeAxiosHttpClient } from "../infrastructure/http/make-axios-http-client";
 
