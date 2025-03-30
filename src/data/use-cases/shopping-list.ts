@@ -21,15 +21,17 @@ export class ShoppingList implements IShoppingList {
 
             const response = await this.dbClient.create<ShoppingListProps, CreateShoppingListResponse>(request);
 
-            return response;
+            return {
+                id: response.id
+            };
         } catch (error) {
             throw new DatabaseError();
         }
     }
 
-    async getAll(): Promise<GetAllShoppingListResult> {
+    async getAll(userId: string): Promise<GetAllShoppingListResult> {
         try {
-            const response = await this.dbClient.getAll() as GetAllShoppingListResult;
+            const response = await this.dbClient.getByFIlter({ user_id: userId }) as GetAllShoppingListResult;
 
             return response;
         } catch (error) {
@@ -55,13 +57,13 @@ export class ShoppingList implements IShoppingList {
         }
     }
     
-    async deleteAll(): Promise<void> {
+    async deleteAll(userId: string): Promise<void> {
         try {
-            const response = await this.getAll();
+            const response = await this.getAll(userId);
 
-            response.map(el => this.dbClient.deleteById(el.id));
+            const promise = response.map(el => this.deleteById(el.id));
 
-            await Promise.all(response);
+            await Promise.all(promise);
         } catch (error) {
             throw new DatabaseError();
         }
