@@ -1,5 +1,7 @@
+import { faker } from "@faker-js/faker";
 import { ShoppingList } from "@src/data/use-cases";
-import { describe } from "vitest";
+import { makeCreateShoppingList } from "@test/domain/mocks/shopping-list";
+import { describe, expect, test } from "vitest";
 import DatabaseSpy from "../protocols/database/mock-database-client";
 import { GuidClientSpy } from "../protocols/guid/mock-guid-client";
 
@@ -22,5 +24,23 @@ const makeSut = (): Props => {
 }
 
 describe('ShoppingList', () => {
+    test('Should be successful create item in list', async() => {
+        const { sut, guid, database } = makeSut();
 
+        const newGuid = faker.string.uuid();
+        const request = makeCreateShoppingList();
+
+        guid.guid = newGuid;
+        database.content = { id: newGuid };
+
+        const response = await sut.create(request);
+
+        expect(database.params).toHaveProperty('created');
+        expect(database.params.id).toBe(newGuid);
+        expect(database.params.name).toBe(request.name);
+        expect(database.params.amount).toBe(request.amount);
+        expect(database.params.typeAmount).toBe(request.typeAmount);
+
+        expect(response.id).toBe(newGuid);
+    });
 });
