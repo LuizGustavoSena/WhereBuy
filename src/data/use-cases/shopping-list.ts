@@ -45,9 +45,13 @@ export class ShoppingList implements IShoppingList {
 
     async getByName(name: string): Promise<GetByNameShoppingListResult> {
         try {
-            const response = await this.dbClient.getByFIlter({ name }) as GetByNameShoppingListResult;
+            const response = await this.dbClient.getByFIlter({ name }) as Partial<ShoppingListProps>[];
 
-            return response;
+            response.forEach(obj => {
+                delete obj.userId;
+            });
+
+            return response as GetByNameShoppingListResult;
         } catch (error) {
             throw new DatabaseError();
         }
