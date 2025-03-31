@@ -77,4 +77,12 @@ describe('ShoppingList', () => {
         expect(response[0].name).toBe(item.name);
         expect(response[0].typeAmount).toBe(item.typeAmount);
     });
+
+    test('Should be error when getAll itens', async() => {
+        const { sut } = makeSut();
+
+        const promise = sut.getAll(faker.string.uuid());
+
+        await expect(promise).rejects.toThrow(new DatabaseError());
+    });
 });
