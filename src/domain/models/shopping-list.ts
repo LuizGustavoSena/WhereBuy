@@ -4,6 +4,7 @@ export type ShoppingListProps = {
     amount: number;
     typeAmount: TypeAmountEnum;
     created: string;
+    userId: string;
 }
 
 export type CreateShoppingListProps = Omit<ShoppingListProps, 'id' | 'created'>;
@@ -16,6 +17,6 @@ export enum TypeAmountEnum {
     LITERS = 'liters'
 }
 
-export type GetAllShoppingListResult = ShoppingListProps[];
+export type GetAllShoppingListResult = Omit<ShoppingListProps, 'userId'>[];
 
-export type GetByNameShoppingListResult = ShoppingListProps[];
+export type GetByNameShoppingListResult = Omit<ShoppingListProps, 'userId'>[];

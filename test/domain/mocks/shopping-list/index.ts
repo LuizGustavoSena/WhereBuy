@@ -1,1 +1,1 @@
-export * from './mock-create-shopping-list';
+export * from './mocks-shopping-list';
