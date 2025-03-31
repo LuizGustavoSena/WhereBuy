@@ -46,7 +46,7 @@ describe('ShoppingList', () => {
     });
 
     test('Should be error when create item in list', async() => {
-        const { sut, guid, database } = makeSut();
+        const { sut, guid } = makeSut();
 
         const request = makeCreateShoppingList();
 
@@ -58,7 +58,7 @@ describe('ShoppingList', () => {
     });
 
     test('Should be successful getAll', async() => {
-        const { sut, guid, database } = makeSut();
+        const { sut, database } = makeSut();
 
         const userId = faker.string.uuid();
         const item = makeShoppingListItem({ userId })
@@ -84,5 +84,26 @@ describe('ShoppingList', () => {
         const promise = sut.getAll(faker.string.uuid());
 
         await expect(promise).rejects.toThrow(new DatabaseError());
+    });
+
+    test('Should be successful getByName', async() => {
+        const { sut, database } = makeSut();
+
+        const name = faker.commerce.productName();
+        const item = makeShoppingListItem({ name })
+
+        database.content = [{ ...item }];
+
+        const response = await sut.getByName(name);
+
+        expect(database.filters.name).toBe(name);
+
+        expect(response).toHaveLength(1);
+        expect(response[0]).not.toHaveProperty('userId');
+        expect(response[0].amount).toBe(item.amount);
+        expect(response[0].created).toBe(item.created);
+        expect(response[0].id).toBe(item.id);
+        expect(response[0].name).toBe(item.name);
+        expect(response[0].typeAmount).toBe(item.typeAmount);
     });
 });
