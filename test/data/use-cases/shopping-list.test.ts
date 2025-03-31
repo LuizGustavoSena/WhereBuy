@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { ShoppingList } from "@src/data/use-cases";
 import { DatabaseError } from "@src/domain/errors";
-import { makeCreateShoppingList } from "@test/domain/mocks/shopping-list";
+import { makeCreateShoppingList, makeShoppingListItem } from "@test/domain/mocks/shopping-list";
 import { describe, expect, test } from "vitest";
 import DatabaseSpy from "../protocols/database/mock-database-client";
 import { GuidClientSpy } from "../protocols/guid/mock-guid-client";
@@ -55,5 +55,26 @@ describe('ShoppingList', () => {
         const promise = sut.create(request);
 
         await expect(promise).rejects.toThrow(new DatabaseError());
+    });
+
+    test('Should be successful getAll', async() => {
+        const { sut, guid, database } = makeSut();
+
+        const userId = faker.string.uuid();
+        const item = makeShoppingListItem({ userId })
+
+        database.content = [{ ...item }];
+
+        const response = await sut.getAll(userId);
+
+        expect(database.filters.userId).toBe(userId);
+
+        expect(response).toHaveLength(1);
+        expect(response[0]).not.toHaveProperty('userId');
+        expect(response[0].amount).toBe(item.amount);
+        expect(response[0].created).toBe(item.created);
+        expect(response[0].id).toBe(item.id);
+        expect(response[0].name).toBe(item.name);
+        expect(response[0].typeAmount).toBe(item.typeAmount);
     });
 });
