@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { ShoppingList } from "@src/data/use-cases";
+import { DatabaseError } from "@src/domain/errors";
 import { makeCreateShoppingList } from "@test/domain/mocks/shopping-list";
 import { describe, expect, test } from "vitest";
 import DatabaseSpy from "../protocols/database/mock-database-client";
@@ -42,5 +43,17 @@ describe('ShoppingList', () => {
         expect(database.params.typeAmount).toBe(request.typeAmount);
 
         expect(response.id).toBe(newGuid);
+    });
+
+    test('Should be error when create item in list', async() => {
+        const { sut, guid, database } = makeSut();
+
+        const request = makeCreateShoppingList();
+
+        guid.guid = faker.string.uuid();
+
+        const promise = sut.create(request);
+
+        await expect(promise).rejects.toThrow(new DatabaseError());
     });
 });
