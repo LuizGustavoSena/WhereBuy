@@ -106,4 +106,12 @@ describe('ShoppingList', () => {
         expect(response[0].name).toBe(item.name);
         expect(response[0].typeAmount).toBe(item.typeAmount);
     });
+
+    test('Should be error when getByName itens', async() => {
+        const { sut } = makeSut();
+
+        const promise = sut.getByName(faker.commerce.productName());
+
+        await expect(promise).rejects.toThrow(new DatabaseError());
+    });
 });
