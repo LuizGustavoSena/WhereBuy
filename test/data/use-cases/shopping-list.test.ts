@@ -139,4 +139,24 @@ describe('ShoppingList', () => {
         expect(database.filters.userId).toBe(userId);
         expect(spy).toBeCalledTimes(2);
     });
+
+    test('Should be successful validateItemOwnership with id', async() => {
+        const { sut, database } = makeSut();
+        var calledCallback = false;
+        const userId = faker.string.uuid();
+        database.content = [ {...makeShoppingListItem({ userId })} ];
+
+        const callback = () => {
+            calledCallback = true;
+        };
+
+        const req = {
+            params: { id: userId },
+            user: { id: userId }
+        }
+
+        await sut.validateItemOwnership(req, {}, callback);
+
+        expect(calledCallback).toBeTruthy();
+    });
 });
