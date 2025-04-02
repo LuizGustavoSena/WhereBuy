@@ -20,3 +20,8 @@ export enum TypeAmountEnum {
 export type GetAllShoppingListResult = Omit<ShoppingListProps, 'userId'>[];
 
 export type GetByNameShoppingListResult = Omit<ShoppingListProps, 'userId'>[];
+
+export type validateItemOwnershipFilter = {
+    id?: number;
+    name?: string;
+}

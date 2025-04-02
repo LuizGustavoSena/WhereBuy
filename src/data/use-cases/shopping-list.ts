@@ -1,5 +1,5 @@
-import { DatabaseError } from "@src/domain/errors";
-import { CreateShoppingListProps, CreateShoppingListResponse, GetAllShoppingListResult, GetByNameShoppingListResult, ShoppingListProps } from "@src/domain/models";
+import { DatabaseError, ItemNotFoundError } from "@src/domain/errors";
+import { CreateShoppingListProps, CreateShoppingListResponse, GetAllShoppingListResult, GetByNameShoppingListResult, ShoppingListProps, validateItemOwnershipFilter } from "@src/domain/models";
 import { IShoppingList } from "@src/domain/use-cases";
 import moment from "moment";
 import { IDatabaseClient } from "../protocols/database";
@@ -75,5 +75,23 @@ export class ShoppingList implements IShoppingList {
         } catch (error) {
             throw new DatabaseError();
         }
+    }
+
+    async validateItemOwnership(req: any, res: any, next: Function) {
+        const idParam = Number(req.params?.id);
+
+        var filter: validateItemOwnershipFilter = { id: idParam };
+
+        if(isNaN(idParam))
+            filter = { name: req.query?.name };
+
+        const item = await this.dbClient.getByFIlter(filter) as Partial<ShoppingListProps>[];
+
+        const isOwn = item.find(el => el.userId === req.user.id);
+
+        if(isOwn)
+            return next();
+
+        throw new ItemNotFoundError();
     }
 }
