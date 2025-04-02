@@ -114,4 +114,14 @@ describe('ShoppingList', () => {
 
         await expect(promise).rejects.toThrow(new DatabaseError());
     });
+
+    test('Should be successful deleteById item', async() => {
+        const { sut, database } = makeSut();
+
+        const id = faker.string.uuid();
+
+        await sut.deleteById(id);
+
+        expect(database.params).toBe(id);
+    });
 });
