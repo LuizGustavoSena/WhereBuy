@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { ShoppingList } from "@src/data/use-cases";
-import { DatabaseError } from "@src/domain/errors";
+import { DatabaseError, ItemNotFoundError } from "@src/domain/errors";
 import { makeCreateShoppingList, makeShoppingListItem } from "@test/domain/mocks/shopping-list";
 import { describe, expect, test, vi } from "vitest";
 import DatabaseSpy from "../protocols/database/mock-database-client";
@@ -158,5 +158,20 @@ describe('ShoppingList', () => {
         await sut.validateItemOwnership(req, {}, callback);
 
         expect(calledCallback).toBeTruthy();
+    });
+
+    test('Should be error validateItemOwnership with another item id', async() => {
+        const { sut, database } = makeSut();
+        const userId = faker.string.uuid();
+        database.content = [ {...makeShoppingListItem({ userId })} ];
+
+        const req = {
+            params: { id: userId },
+            user: { id: faker.string.uuid() }
+        }
+
+        const promise = sut.validateItemOwnership(req, {}, () => {});
+
+        await expect(promise).rejects.toThrow(new ItemNotFoundError());
     });
 });
