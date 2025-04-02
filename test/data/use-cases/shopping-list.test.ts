@@ -2,7 +2,7 @@ import { faker } from "@faker-js/faker";
 import { ShoppingList } from "@src/data/use-cases";
 import { DatabaseError } from "@src/domain/errors";
 import { makeCreateShoppingList, makeShoppingListItem } from "@test/domain/mocks/shopping-list";
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import DatabaseSpy from "../protocols/database/mock-database-client";
 import { GuidClientSpy } from "../protocols/guid/mock-guid-client";
 
@@ -123,5 +123,20 @@ describe('ShoppingList', () => {
         await sut.deleteById(id);
 
         expect(database.params).toBe(id);
+    });
+
+    test('Should be successful deleteAll item', async() => {
+        const { sut, database } = makeSut();
+        
+        const spy = vi.spyOn(database, 'deleteById');
+        const userId = faker.string.uuid();
+        const itens = [ makeShoppingListItem({userId}), makeShoppingListItem({userId}) ];
+
+        database.content = [ ...itens ];
+
+        await sut.deleteAll(userId);
+
+        expect(database.filters.userId).toBe(userId);
+        expect(spy).toBeCalledTimes(2);
     });
 });
