@@ -174,4 +174,25 @@ describe('ShoppingList', () => {
 
         await expect(promise).rejects.toThrow(new ItemNotFoundError());
     });
+
+    test('Should be successful validateItemOwnership with query name', async() => {
+        const { sut, database } = makeSut();
+        var calledCallback = false;
+        const name = faker.commerce.productName();
+        const userId = faker.string.uuid();
+        database.content = [ {...makeShoppingListItem({ userId, name })} ];
+
+        const callback = () => {
+            calledCallback = true;
+        };
+
+        const req = {
+            query: { name },
+            user: { id: userId }
+        }
+
+        await sut.validateItemOwnership(req, {}, callback);
+
+        expect(calledCallback).toBeTruthy();
+    });
 });
