@@ -195,4 +195,20 @@ describe('ShoppingList', () => {
 
         expect(calledCallback).toBeTruthy();
     });
+
+    test('Should be error validateItemOwnership with another item name', async() => {
+        const { sut, database } = makeSut();
+        const name = faker.commerce.productName();
+        const userId = faker.string.uuid();
+        database.content = [ {...makeShoppingListItem({ userId, name })} ];
+
+        const req = {
+            query: { name },
+            user: { id: faker.string.uuid() }
+        }
+
+        const promise = sut.validateItemOwnership(req, {}, () => {});
+
+        await expect(promise).rejects.toThrow(new ItemNotFoundError());
+    });
 });
