@@ -108,11 +108,23 @@ describe('ShoppingList', () => {
     });
 
     test('Should be error when getByName itens', async() => {
-        const { sut } = makeSut();
+        const { sut, database } = makeSut();
+
+        database.content = { };
 
         const promise = sut.getByName(faker.commerce.productName());
 
         await expect(promise).rejects.toThrow(new DatabaseError());
+    });
+
+    test('Should be error when getByName empty', async() => {
+        const { sut, database } = makeSut();
+
+        database.content = [];
+
+        const promise = sut.getByName(faker.commerce.productName());
+
+        await expect(promise).rejects.toThrow(new ItemNotFoundError());
     });
 
     test('Should be successful deleteById item', async() => {
