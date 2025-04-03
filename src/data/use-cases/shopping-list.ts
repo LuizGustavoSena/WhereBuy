@@ -47,12 +47,18 @@ export class ShoppingList implements IShoppingList {
         try {
             const response = await this.dbClient.getByFIlter({ name }) as Partial<ShoppingListProps>[];
 
+            if(!response || response.length === 0)
+                throw new ItemNotFoundError();
+            
             response.forEach(obj => {
                 delete obj.userId;
             });
 
             return response as GetByNameShoppingListResult;
         } catch (error) {
+            if(error instanceof ItemNotFoundError)
+                throw new ItemNotFoundError();
+
             throw new DatabaseError();
         }
     }
