@@ -6,6 +6,12 @@ export enum ShoppingListCreateMessageRequire {
     TYPE_AMOUNT = 'O campo typeAmount deve ser preenchido'
 }
 
+export enum ShoppingListCreateMessageType {
+    NAME = 'Campo name deve ser do tipo string',
+    AMOUNT = 'Campo amount deve ser do tipo number',
+
+}
+
 export interface IShoppingListValidation {
     create(params: CreateShoppingListProps): void;
     getByName(name: string): void;
