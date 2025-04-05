@@ -6,5 +6,5 @@ export interface IShoppingList {
     getByName(name: string): Promise<GetByNameShoppingListResult>;
     deleteById(id: string): Promise<void>;
     deleteAll(userId: string): Promise<void>;
-    validateItemOwnership(req: any, res: any, next: Function): promise<void>;
+    validateItemOwnership(req: any, res: any, next: Function): Promise<void>;
 }
