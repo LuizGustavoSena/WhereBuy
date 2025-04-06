@@ -9,7 +9,7 @@ export enum ShoppingListCreateMessageRequire {
 export enum ShoppingListCreateMessageType {
     NAME = 'Campo name deve ser do tipo string',
     AMOUNT = 'Campo amount deve ser do tipo number',
-
+    TYPE_AMOUNT = 'Tipo não reconhecido por typeAmount'
 }
 
 export interface IShoppingListValidation {
