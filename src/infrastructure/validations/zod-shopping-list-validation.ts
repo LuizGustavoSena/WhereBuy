@@ -1,6 +1,6 @@
 import { ValidationError } from "@src/domain/errors";
 import { CreateShoppingListProps, TypeAmountEnum } from "@src/domain/models";
-import { IShoppingListValidation, ShoppingListCreateMessageRequire, ShoppingListCreateMessageType } from "@src/domain/validations";
+import { IShoppingListValidation, ShoppingListMessageRequire, ShoppingListMessageType } from "@src/domain/validations";
 import { z, ZodError } from "zod";
 
 export class ZodShoppingListValidation implements IShoppingListValidation {
@@ -8,16 +8,18 @@ export class ZodShoppingListValidation implements IShoppingListValidation {
 
     create(params: CreateShoppingListProps): void {
         const validation = z.object({
-            name: z.string({required_error: ShoppingListCreateMessageRequire.NAME, invalid_type_error: ShoppingListCreateMessageType.NAME }),
-            amount: z.number({ required_error: ShoppingListCreateMessageRequire.AMOUNT, invalid_type_error: ShoppingListCreateMessageType.AMOUNT }),
-            typeAmount: z.nativeEnum(TypeAmountEnum, { required_error: ShoppingListCreateMessageRequire.TYPE_AMOUNT, invalid_type_error: ShoppingListCreateMessageType.TYPE_AMOUNT })
+            name: z.string({required_error: ShoppingListMessageRequire.NAME, invalid_type_error: ShoppingListMessageType.NAME }),
+            amount: z.number({ required_error: ShoppingListMessageRequire.AMOUNT, invalid_type_error: ShoppingListMessageType.AMOUNT }),
+            typeAmount: z.nativeEnum(TypeAmountEnum, { required_error: ShoppingListMessageRequire.TYPE_AMOUNT, invalid_type_error: ShoppingListMessageType.TYPE_AMOUNT })
         });
 
         this.throwValidationError(() => validation.parse(params));
     }
 
     getByName(name: string): void {
-        throw new Error("Method not implemented.");
+        const validation = z.string({ required_error: ShoppingListMessageRequire.NAME, invalid_type_error: ShoppingListMessageType.NAME });
+
+        this.throwValidationError(() => validation.parse(name));
     }
 
     deleteById(id: string): void {
