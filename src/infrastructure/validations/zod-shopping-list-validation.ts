@@ -23,7 +23,10 @@ export class ZodShoppingListValidation implements IShoppingListValidation {
     }
 
     deleteById(id: string): void {
-        throw new Error("Method not implemented.");
+        const validation = z.string({ required_error: ShoppingListMessageRequire.ID})
+            .uuid({ message: ShoppingListMessageType.ID });
+
+        this.throwValidationError(() => validation.parse(id));
     }
 
     private throwValidationError(callback: Function){
