@@ -50,4 +50,10 @@ describe('ZodShoppingListValidation', () => {
 
         expect(() => sut.create(request)).toThrow(new ValidationError(ShoppingListMessageType.AMOUNT));
     });
+
+    test('Should be error whitout name getByName method', () => {
+        const sut = makeSut();
+        // @ts-expect-error
+        expect(() => sut.getByName()).toThrow(new ValidationError(ShoppingListMessageRequire.NAME));
+    });
 })
