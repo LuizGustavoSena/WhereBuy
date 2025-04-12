@@ -42,4 +42,12 @@ describe('ZodShoppingListValidation', () => {
 
         expect(() => sut.create(request)).toThrow(new ValidationError(ShoppingListMessageType.NAME));
     });
+
+    test('Should be error whit another type amount create method', () => {
+        const sut = makeSut();
+        // @ts-expect-error
+        const request = makeCreateShoppingList({ amount: faker.string.sample()});
+
+        expect(() => sut.create(request)).toThrow(new ValidationError(ShoppingListMessageType.AMOUNT));
+    });
 })
