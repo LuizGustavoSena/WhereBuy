@@ -56,4 +56,10 @@ describe('ZodShoppingListValidation', () => {
         // @ts-expect-error
         expect(() => sut.getByName()).toThrow(new ValidationError(ShoppingListMessageRequire.NAME));
     });
+
+    test('Should be error whit another name type getByName method', () => {
+        const sut = makeSut();
+        // @ts-expect-error
+        expect(() => sut.getByName(faker.number.int())).toThrow(new ValidationError(ShoppingListMessageType.NAME));
+    });
 })
