@@ -23,7 +23,7 @@ export class ZodShoppingListValidation implements IShoppingListValidation {
     }
 
     deleteById(id: string): void {
-        const validation = z.string({ required_error: ShoppingListMessageRequire.ID})
+        const validation = z.string({ required_error: ShoppingListMessageRequire.ID, invalid_type_error: ShoppingListMessageType.ID })
             .uuid({ message: ShoppingListMessageType.ID });
 
         this.throwValidationError(() => validation.parse(id));
