@@ -62,4 +62,10 @@ describe('ZodShoppingListValidation', () => {
         // @ts-expect-error
         expect(() => sut.getByName(faker.number.int())).toThrow(new ValidationError(ShoppingListMessageType.NAME));
     });
+
+    test('Should be error whitout id deleteById method', () => {
+        const sut = makeSut();
+        // @ts-expect-error
+        expect(() => sut.deleteById()).toThrow(new ValidationError(ShoppingListMessageRequire.ID));
+    });
 })
