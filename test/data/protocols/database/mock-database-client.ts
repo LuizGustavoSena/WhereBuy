@@ -1,30 +1,30 @@
 import { IDatabaseClient, ParamsUpdateDatabaseClient } from '@src/data/protocols/database';
 
-export default class DatabaseSpy implements IDatabaseClient {
+export default class DatabaseSpy<T = any> implements IDatabaseClient<T> {
     params: any;
     filters: any;
     content: any;
+    tableName: string;
 
-    constructor() { }tableName: string;
-;
+    constructor() { };
 
-    async create<T, R>(params: T): Promise<R> {
+    async create(params: T): Promise<T> {
        this.params = params;
 
        return this.content;
     }
 
-    async getAll<T>(): Promise<T> {
+    async getAllByUserId(userId: string): Promise<T[]> {
        return this.content;
     }
 
-    async getByFIlter<T>(filter: any): Promise<T> {
+    async getByFIlter(filter: object): Promise<T[]> {
         this.filters = filter;
 
        return this.content;
     }
 
-    async update<T>(params: ParamsUpdateDatabaseClient<T>): Promise<T> {
+    async update(params: ParamsUpdateDatabaseClient<T>): Promise<T> {
         this.params = params;
 
        return this.content;

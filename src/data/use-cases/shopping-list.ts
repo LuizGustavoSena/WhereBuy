@@ -7,7 +7,7 @@ import { IGuidClient } from "../protocols/guid";
 
 export class ShoppingList implements IShoppingList {
     constructor(
-        private dbClient: IDatabaseClient,
+        private dbClient: IDatabaseClient<ShoppingListProps>,
         private guidClient: IGuidClient,
     ){};
 
@@ -19,7 +19,7 @@ export class ShoppingList implements IShoppingList {
                 created: moment().toISOString()
             }
 
-            const response = await this.dbClient.create<ShoppingListProps, CreateShoppingListResponse>(request);
+            const response = await this.dbClient.create(request);
 
             return {
                 id: response.id

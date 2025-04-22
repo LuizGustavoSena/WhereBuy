@@ -4,12 +4,12 @@ export type ParamsUpdateDatabaseClient<T> = {
     data: Partial<Omit<T, 'id'>>
 }
 
-export interface IDatabaseClient {
+export interface IDatabaseClient<T> {
     tableName: string;
 
-    create<T, R>(params: T): Promise<R>;
-    getAll<T>(): Promise<T>;
-    getByFIlter<T>(filter: any): Promise<T>;
-    update<T>(params: ParamsUpdateDatabaseClient<T>): Promise<T>;
+    create(params: T): Promise<T>;
+    getAllByUserId(userId: string): Promise<T[]>;
+    getByFIlter(filter: object): Promise<T[]>;
+    update(params: ParamsUpdateDatabaseClient<T>): Promise<T>;
     deleteById(id: string): Promise<void>;
 }
