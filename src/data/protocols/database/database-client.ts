@@ -5,8 +5,6 @@ export type ParamsUpdateDatabaseClient<T> = {
 }
 
 export interface IDatabaseClient<T> {
-    tableName: string;
-
     create(params: T): Promise<T>;
     getAllByUserId(userId: string): Promise<T[]>;
     getByFIlter(filter: object): Promise<T[]>;
