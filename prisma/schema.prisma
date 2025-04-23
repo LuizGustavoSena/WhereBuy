@@ -1,0 +1,27 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model ShoppingList {
+  id         String     @id
+  name       String
+  amount     Float
+  typeAmount TypeAmount
+  created    DateTime
+  userId     String
+}
+
+enum TypeAmount {
+  unit
+  grams
+  liters
+}
