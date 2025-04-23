@@ -33,7 +33,12 @@ export class PrimaDatabase implements IDatabaseClient<ShoppingListProps> {
     }
     
     async update(params: ParamsUpdateDatabaseClient<ShoppingListProps>): Promise<ShoppingListProps> {
-        throw new Error("Method not implemented.");
+        const response = await this.prisma.shoppingList.update({
+            where: { id: params.id },
+            data: params.data
+        });
+        
+        return response as ShoppingListProps;
     }
     
     async deleteById(id: string): Promise<void> {
