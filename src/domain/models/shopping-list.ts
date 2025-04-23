@@ -3,7 +3,7 @@ export type ShoppingListProps = {
     name: string;
     amount: number;
     typeAmount: TypeAmountEnum;
-    created: string;
+    created: Date;
     userId: string;
 }
 
