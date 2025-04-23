@@ -17,7 +17,11 @@ export class PrimaDatabase implements IDatabaseClient<ShoppingListProps> {
     }
 
     async getAllByUserId(userId: string): Promise<ShoppingListProps[]> {
-        throw new Error("Method not implemented.");
+        const response = await this.prisma.shoppingList.findMany({
+            where: { userId }
+        });
+
+        return response as ShoppingListProps[];
     }
     
     async getByFIlter(filter: object): Promise<ShoppingListProps[]> {
