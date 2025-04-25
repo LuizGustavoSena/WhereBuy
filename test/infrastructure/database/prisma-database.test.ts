@@ -16,4 +16,14 @@ describe('PrismaDatabase', () => {
 
         expect(response).toEqual(shoppingList);
     });
+
+    test('Should be successful getAllByUserId shoppingList itens', async () => {
+        const shoppingList = makeShoppingListItem();
+
+        await sut.create(shoppingList);
+
+        const response = await sut.getAllByUserId(userId);
+
+        expect(response).toHaveLength(1);
+    });
 });
