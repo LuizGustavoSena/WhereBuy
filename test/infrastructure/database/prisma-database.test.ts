@@ -26,4 +26,10 @@ describe('PrismaDatabase', () => {
 
         expect(response).toHaveLength(1);
     });
+
+    test('Should be successful getByFIlter shoppingList itens', async () => {
+        const response = await sut.getByFIlter({ id });
+
+        expect(response).toHaveLength(1);
+    });
 });
