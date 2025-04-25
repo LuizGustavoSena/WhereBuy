@@ -3,7 +3,7 @@ import { ShoppingListProps } from "@src/domain/models";
 import { PrismaClient } from '../../../generated/prisma';
 
 export class PrismaDatabase implements IDatabaseClient<ShoppingListProps> {
-    prisma: PrismaClient;
+    private prisma: PrismaClient;
 
     constructor() {
         this.prisma = new PrismaClient();
