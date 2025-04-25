@@ -53,4 +53,12 @@ describe('PrismaDatabase', () => {
 
         expect(response.name).toBe(name);
     });
+
+    test('Should be successful deleteById shoppingList itens', async () => {
+        await sut.deleteById(id);
+
+        const response = await sut.getByFIlter({ id });
+
+        expect(response).toHaveLength(0);
+    });
 });
