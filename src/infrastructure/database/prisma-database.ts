@@ -2,7 +2,7 @@ import { IDatabaseClient, ParamsUpdateDatabaseClient } from "@src/data/protocols
 import { ShoppingListProps } from "@src/domain/models";
 import { PrismaClient } from '../../../generated/prisma';
 
-export class PrimaDatabase implements IDatabaseClient<ShoppingListProps> {
+export class PrismaDatabase implements IDatabaseClient<ShoppingListProps> {
     prisma: PrismaClient;
 
     constructor() {
