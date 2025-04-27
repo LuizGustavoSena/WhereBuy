@@ -6,9 +6,6 @@ import { afterAll, describe, expect, test } from "vitest";
 const sut = new PrismaDatabase();
 
 describe('PrismaDatabase', () => {
-    var id = faker.string.uuid();
-    var userId = faker.string.uuid();
-
     afterAll(async () => {
         const response = await sut.getByFIlter({});
 
@@ -20,7 +17,7 @@ describe('PrismaDatabase', () => {
     });
 
     test('Should be successful create a shoppingList item', async () => {
-        const shoppingList = makeShoppingListItem({ id, userId });
+        const shoppingList = makeShoppingListItem();
 
         const response = await sut.create(shoppingList);
 
@@ -28,33 +25,50 @@ describe('PrismaDatabase', () => {
     });
 
     test('Should be successful getAllByUserId shoppingList itens', async () => {
-        const shoppingList = makeShoppingListItem();
+        const userId = faker.string.uuid();
+        const shoppingList = makeShoppingListItem({ userId });
 
         await sut.create(shoppingList);
 
         const response = await sut.getAllByUserId(userId);
 
         expect(response).toHaveLength(1);
+        expect(response[0]).toEqual(shoppingList);
     });
 
     test('Should be successful getByFIlter shoppingList itens', async () => {
-        const response = await sut.getByFIlter({ id });
+        const name = `${faker.commerce.productName()}-test`;
+        const shoppingList = makeShoppingListItem({ name });
+
+        await sut.create(shoppingList);
+
+        const response = await sut.getByFIlter({ name });
 
         expect(response).toHaveLength(1);
+        expect(response[0]).toEqual(shoppingList);
     });
 
     test('Should be successful update a shoppingList item', async () => {
-        const name = `${faker.commerce.productName()}-test`;
+        const updatedName = `${faker.commerce.productName()}-test`;
+        const id = faker.string.uuid();
+        const shoppingList = makeShoppingListItem({ id });
+
+        await sut.create(shoppingList);
 
         const response = await sut.update({
             id,
-            data: { name }
+            data: { name: updatedName }
         });
 
-        expect(response.name).toBe(name);
+        expect(response).toEqual({ ...shoppingList, name: updatedName });
     });
 
     test('Should be successful deleteById shoppingList itens', async () => {
+        const id = faker.string.uuid();
+        const shoppingList = makeShoppingListItem({ id });
+
+        await sut.create(shoppingList);
+        
         await sut.deleteById(id);
 
         const response = await sut.getByFIlter({ id });
