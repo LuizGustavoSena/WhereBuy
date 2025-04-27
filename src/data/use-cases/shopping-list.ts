@@ -16,7 +16,7 @@ export class ShoppingList implements IShoppingList {
             const request: ShoppingListProps = {
                 ...params,
                 id: this.guidClient.generate(),
-                created: moment().toISOString()
+                created: moment().toDate()
             }
 
             const response = await this.dbClient.create(request);
