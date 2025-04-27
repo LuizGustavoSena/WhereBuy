@@ -11,4 +11,11 @@ describe('UuidGuid', () => {
 
         expect(validationFGuid.test(guid)).toBeTruthy();
     });
+
+    test(`Shouldn't be equals guids`, () => {
+        const guid1 = sut.generate();
+        const guid2 = sut.generate();
+
+        expect(guid1).not.toBe(guid2);
+    });
 });
