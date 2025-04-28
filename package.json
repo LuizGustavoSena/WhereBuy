@@ -6,9 +6,10 @@
   "scripts": {
     "build": "tsup src/main/server.ts --env.NODE_ENV production",
     "start": "npm run build && node dist/src/server.js",
-    "dev": "dotenv -e .env.development -- tsx ./src/main/server.ts",
-    "test": "vitest --run --fileParallelism",
-    "seed": "./node_modules/.bin/knex seed:run --env test"
+    "dev": "npm run env:dev tsx ./src/main/server.ts",
+    "env:dev": "dotenv -e .env.development --",
+    "env:test": "dotenv -e .env.test --",
+    "test": "dotenv -e .env.test -- vitest --run --fileParallelism"
   },
   "repository": {
     "type": "git",
