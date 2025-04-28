@@ -1,19 +1,14 @@
 import { faker } from "@faker-js/faker";
 import { PrismaDatabase } from "@src/infrastructure/database";
 import { makeShoppingListItem } from "@test/domain/mocks/shopping-list";
+import { execSync } from "node:child_process";
 import { afterAll, describe, expect, test } from "vitest";
 
 const sut = new PrismaDatabase();
 
 describe('PrismaDatabase', () => {
-    afterAll(async () => {
-        const response = await sut.getByFIlter({});
-
-        const removeItens = response.filter(el => el.name.includes('-test'));
-
-        await Promise.all(removeItens.map(async (el) => {
-            await sut.deleteById(el.id);
-        }));
+    afterAll(() => {
+        execSync('npx prisma migrate reset -f');
     });
 
     test('Should be successful create a shoppingList item', async () => {
