@@ -2,7 +2,7 @@ import { CreateShoppingListProps, CreateShoppingListResponse, GetAllShoppingList
 
 export interface IShoppingList {
     create(params: CreateShoppingListProps): Promise<CreateShoppingListResponse>;
-    getAll(userId: string): Promise<GetAllShoppingListResult>;
+    getAllByUserId(userId: string): Promise<GetAllShoppingListResult>;
     getByName(name: string): Promise<GetByNameShoppingListResult>;
     deleteById(id: string): Promise<void>;
     deleteAll(userId: string): Promise<void>;

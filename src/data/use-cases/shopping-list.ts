@@ -9,7 +9,7 @@ export class ShoppingList implements IShoppingList {
     constructor(
         private dbClient: IDatabaseClient<ShoppingListProps>,
         private guidClient: IGuidClient,
-    ){};
+    ) { }
 
     async create(params: CreateShoppingListProps): Promise<CreateShoppingListResponse> {
         try {
@@ -29,7 +29,7 @@ export class ShoppingList implements IShoppingList {
         }
     }
 
-    async getAll(userId: string): Promise<GetAllShoppingListResult> {
+    async getAllByUserId(userId: string): Promise<GetAllShoppingListResult> {
         try {
             const response = await this.dbClient.getByFIlter({ userId }) as Partial<ShoppingListProps>[];
 
@@ -47,16 +47,16 @@ export class ShoppingList implements IShoppingList {
         try {
             const response = await this.dbClient.getByFIlter({ name }) as Partial<ShoppingListProps>[];
 
-            if(!response || response.length === 0)
+            if (!response || response.length === 0)
                 throw new ItemNotFoundError();
-            
+
             response.forEach(obj => {
                 delete obj.userId;
             });
 
             return response as GetByNameShoppingListResult;
         } catch (error) {
-            if(error instanceof ItemNotFoundError)
+            if (error instanceof ItemNotFoundError)
                 throw new ItemNotFoundError();
 
             throw new DatabaseError();
@@ -70,10 +70,10 @@ export class ShoppingList implements IShoppingList {
             throw new DatabaseError();
         }
     }
-    
+
     async deleteAll(userId: string): Promise<void> {
         try {
-            const response = await this.getAll(userId);
+            const response = await this.getAllByUserId(userId);
 
             const promise = response.map(el => this.deleteById(el.id));
 
@@ -88,14 +88,14 @@ export class ShoppingList implements IShoppingList {
 
         var filter: validateItemOwnershipFilter = { id: idParam };
 
-        if(isNaN(idParam))
+        if (isNaN(idParam))
             filter = { name: req.query?.name };
 
         const item = await this.dbClient.getByFIlter(filter) as Partial<ShoppingListProps>[];
 
         const isOwn = item.find(el => el.userId === req.user.id);
 
-        if(isOwn)
+        if (isOwn)
             return next();
 
         throw new ItemNotFoundError();
