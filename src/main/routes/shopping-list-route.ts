@@ -1,17 +1,10 @@
-import { FastifyReply, FastifyRequest } from "fastify";
-import { FastifyInstance } from "fastify/types/instance";
-import { makeShoppingList } from "../factories/use-cases";
+import express from "express";
+import { makeShoppingListController } from "../factories/controllers";
 
-export const ShoppingListRouter = (app: FastifyInstance) => {
-    const shoppingListService = makeShoppingList();;
+const router = express.Router();
 
-    app.get('/', async (req: FastifyRequest, res: FastifyReply) => {
-        try {
-            const response = await shoppingListService.getAllByUserId('');
+const shoppingListController = makeShoppingListController();
 
-            res.status(response.length > 0 ? 200 : 204).send(response);
-        } catch (error) {
+router.get('/', shoppingListController.getAllByUserId);
 
-        }
-    });
-}
+export default router;
