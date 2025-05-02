@@ -4,9 +4,9 @@ import { IShoppingList } from "@src/domain/use-cases";
 export class ShoppingListController {
     constructor(
         private shoppingListService: IShoppingList
-    ){};
+    ) { };
 
-    async create(req: any, res: any, next: Function){
+    async create(req: any, res: any, next: Function) {
         try {
             const response = await this.shoppingListService.create(req.body);
 
@@ -16,9 +16,9 @@ export class ShoppingListController {
         }
     }
 
-    async getAll(req: any, res: any, next: Function){
+    async getAllByUserId(req: any, res: any, next: Function) {
         try {
-            const response = await this.shoppingListService.getAll(req.user.id);
+            const response = await this.shoppingListService.getAllByUserId(req.user.id);
 
             res.status(response.length > 0 ? 200 : 204).send(response);
         } catch (error) {
@@ -26,7 +26,7 @@ export class ShoppingListController {
         }
     }
 
-    async getByName(req: any, res: any, next: Function){
+    async getByName(req: any, res: any, next: Function) {
         try {
             const response = await this.shoppingListService.getByName(req.query.name);
 
@@ -36,7 +36,7 @@ export class ShoppingListController {
         }
     }
 
-    async deleteById(req: any, res: any, next: Function){
+    async deleteById(req: any, res: any, next: Function) {
         try {
             await this.shoppingListService.deleteById(req.params.id);
 
@@ -46,7 +46,7 @@ export class ShoppingListController {
         }
     }
 
-    async deleteAll(req: any, res: any, next: Function){
+    async deleteAll(req: any, res: any, next: Function) {
         try {
             await this.shoppingListService.deleteAll(req.user.id);
 
