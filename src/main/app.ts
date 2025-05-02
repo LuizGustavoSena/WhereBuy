@@ -1,8 +1,9 @@
-import fastify from "fastify";
-import { ShoppingListRouter } from './routes';
+import express from 'express';
+import ShoppingListRouter from './routes/shopping-list-route';
 
-const app = fastify();
+const app = express();
+const protectedRoutes = express.Router();
 
-app.register(ShoppingListRouter, { prefix: '/shopping-list' });
+protectedRoutes.use('/shopping-list', ShoppingListRouter);
 
 export default app;
