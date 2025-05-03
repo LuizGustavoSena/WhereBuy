@@ -1,3 +1,3 @@
 export interface IValidationToken {
-    validateByToken(token: string): Promise<boolean>;
+    validateByToken(token: string): Promise<string>;
 }
