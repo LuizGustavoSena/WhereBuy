@@ -3,10 +3,10 @@ import authentication from './middlewares/protected-router';
 import ShoppingListRouter from './routes/shopping-list-route';
 
 const app = express();
-const protectedRoutes = express.Router();
+const protectedRouter = express.Router();
 
-protectedRoutes.use('/shopping-list', ShoppingListRouter);
+protectedRouter.use('/shopping-list', ShoppingListRouter);
 
-app.use('/v1', authentication, protectedRoutes)
+app.use('/v1', authentication, protectedRouter);
 
 export default app;
