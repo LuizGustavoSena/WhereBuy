@@ -18,7 +18,7 @@ export class ShoppingListController {
 
     getAllByUserId = async (req: any, res: any, next: Function) => {
         try {
-            const response = await this.shoppingListService.getAllByUserId(req.user.id);
+            const response = await this.shoppingListService.getAllByUserId(req.userId);
 
             res.status(response.length > 0 ? 200 : 204).send(response);
         } catch (error) {
@@ -48,7 +48,7 @@ export class ShoppingListController {
 
     deleteAll = async (req: any, res: any, next: Function) => {
         try {
-            await this.shoppingListService.deleteAll(req.user.id);
+            await this.shoppingListService.deleteAll(req.userId);
 
             res.status(200).send();
         } catch (error) {

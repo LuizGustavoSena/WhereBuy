@@ -2,7 +2,6 @@ import { makeValidationToken } from '../factories/use-cases';
 
 const validationTokenService = makeValidationToken();
 
-// const authentication = async (err: Error, req: Request, res: Response, next: NextFunction) => {
 const authentication = async (req: any, res: any, next: any) => {
     const { authorization } = req.headers;
 
@@ -12,7 +11,7 @@ const authentication = async (req: any, res: any, next: any) => {
     try {
         const userId = await validationTokenService.validateByToken(authorization.split(' ')[1]);
 
-        req.user = { id: userId };
+        req.userId = userId;
 
         return next(null);
     } catch (error) {
