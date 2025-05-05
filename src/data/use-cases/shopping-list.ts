@@ -1,5 +1,5 @@
 import { DatabaseError, ItemNotFoundError } from "@src/domain/errors";
-import { CreateShoppingListProps, CreateShoppingListResponse, GetAllShoppingListResult, GetByNameShoppingListResult, ShoppingListProps, validateItemOwnershipFilter } from "@src/domain/models";
+import { CreateShoppingListProps, CreateShoppingListResponse, GetAllShoppingListResult, GetByFilterShoppingListResult, GetByNameShoppingListResult, ShoppingListProps } from "@src/domain/models";
 import { IShoppingList } from "@src/domain/use-cases";
 import moment from "moment";
 import { IDatabaseClient } from "../protocols/database";
@@ -30,31 +30,33 @@ export class ShoppingList implements IShoppingList {
     }
 
     getAllByUserId = async (userId: string): Promise<GetAllShoppingListResult> => {
-        try {
-            const response = await this.dbClient.getByFIlter({ userId }) as Partial<ShoppingListProps>[];
+        const response = await this.getByFilter({ userId }) as Partial<ShoppingListProps>[];
 
-            response.forEach(obj => {
-                delete obj.userId;
-            });
+        response.forEach(obj => {
+            delete obj.userId;
+        });
 
-            return response as GetAllShoppingListResult;
-        } catch (error) {
-            throw new DatabaseError();
-        }
+        return response as GetAllShoppingListResult;
     }
 
     getByName = async (name: string): Promise<GetByNameShoppingListResult> => {
+        const response = await this.getByFilter({ name }) as Partial<ShoppingListProps>[];
+
+        response.forEach(obj => {
+            delete obj.userId;
+        });
+
+        return response as GetByNameShoppingListResult;
+    }
+
+    getByFilter = async (filter: object): Promise<GetByFilterShoppingListResult> => {
         try {
-            const response = await this.dbClient.getByFIlter({ name }) as Partial<ShoppingListProps>[];
+            const response = await this.dbClient.getByFIlter(filter) as Partial<ShoppingListProps>[];
 
             if (!response || response.length === 0)
                 throw new ItemNotFoundError();
 
-            response.forEach(obj => {
-                delete obj.userId;
-            });
-
-            return response as GetByNameShoppingListResult;
+            return response as GetByFilterShoppingListResult;
         } catch (error) {
             if (error instanceof ItemNotFoundError)
                 throw new ItemNotFoundError();
@@ -81,23 +83,5 @@ export class ShoppingList implements IShoppingList {
         } catch (error) {
             throw new DatabaseError();
         }
-    }
-
-    validateItemOwnership = async (req: any, res: any, next: Function) => {
-        const idParam = Number(req.params?.id);
-
-        var filter: validateItemOwnershipFilter = { id: idParam };
-
-        if (isNaN(idParam))
-            filter = { name: req.query?.name };
-
-        const item = await this.dbClient.getByFIlter(filter) as Partial<ShoppingListProps>[];
-
-        const isOwn = item.find(el => el.userId === req.user.id);
-
-        if (isOwn)
-            return next();
-
-        throw new ItemNotFoundError();
     }
 }
