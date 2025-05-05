@@ -1,4 +1,6 @@
 import { HttpStatusCode } from "@src/data/protocols/http";
+import { ItemNotFoundError } from "@src/domain/errors";
+import { validateItemOwnershipFilter } from "@src/domain/models";
 import { IShoppingList } from "@src/domain/use-cases";
 
 export class ShoppingListController {
@@ -57,12 +59,20 @@ export class ShoppingListController {
     }
 
     paramsInterceptor = async (req: any, res: any, next: any) => {
-        try {
-            await this.shoppingListService.validateItemOwnership(req, res, next);
+        const idParam = Number(req.params?.id);
 
-            next();
-        } catch (error) {
-            next(error);
-        }
+        var filter: validateItemOwnershipFilter = { id: idParam };
+
+        if (isNaN(idParam))
+            filter = { name: req.query?.name };
+
+        const item = await this.shoppingListService.getByFilter(filter);
+
+        const isOwn = item.find(el => el.userId === req.user.id);
+
+        if (isOwn)
+            return next();
+
+        throw new ItemNotFoundError();
     }
 }
