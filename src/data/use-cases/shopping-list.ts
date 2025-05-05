@@ -11,7 +11,7 @@ export class ShoppingList implements IShoppingList {
         private guidClient: IGuidClient,
     ) { }
 
-    async create(params: CreateShoppingListProps): Promise<CreateShoppingListResponse> {
+    create = async (params: CreateShoppingListProps): Promise<CreateShoppingListResponse> => {
         try {
             const request: ShoppingListProps = {
                 ...params,
@@ -29,7 +29,7 @@ export class ShoppingList implements IShoppingList {
         }
     }
 
-    async getAllByUserId(userId: string): Promise<GetAllShoppingListResult> {
+    getAllByUserId = async (userId: string): Promise<GetAllShoppingListResult> => {
         try {
             const response = await this.dbClient.getByFIlter({ userId }) as Partial<ShoppingListProps>[];
 
@@ -43,7 +43,7 @@ export class ShoppingList implements IShoppingList {
         }
     }
 
-    async getByName(name: string): Promise<GetByNameShoppingListResult> {
+    getByName = async (name: string): Promise<GetByNameShoppingListResult> => {
         try {
             const response = await this.dbClient.getByFIlter({ name }) as Partial<ShoppingListProps>[];
 
@@ -63,7 +63,7 @@ export class ShoppingList implements IShoppingList {
         }
     }
 
-    async deleteById(id: string): Promise<void> {
+    deleteById = async (id: string): Promise<void> => {
         try {
             await this.dbClient.deleteById(id);
         } catch (error) {
@@ -71,7 +71,7 @@ export class ShoppingList implements IShoppingList {
         }
     }
 
-    async deleteAll(userId: string): Promise<void> {
+    deleteAll = async (userId: string): Promise<void> => {
         try {
             const response = await this.getAllByUserId(userId);
 
@@ -83,7 +83,7 @@ export class ShoppingList implements IShoppingList {
         }
     }
 
-    async validateItemOwnership(req: any, res: any, next: Function) {
+    validateItemOwnership = async (req: any, res: any, next: Function) => {
         const idParam = Number(req.params?.id);
 
         var filter: validateItemOwnershipFilter = { id: idParam };

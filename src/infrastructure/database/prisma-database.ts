@@ -9,30 +9,30 @@ export class PrismaDatabase implements IDatabaseClient<ShoppingListProps> {
         this.prisma = new PrismaClient();
     }
 
-    async create(params: ShoppingListProps): Promise<ShoppingListProps> {
+    create = async (params: ShoppingListProps): Promise<ShoppingListProps> => {
         const response = await this.prisma.shoppingList
-            .create({ data: params});
+            .create({ data: params });
 
         return response as ShoppingListProps;
     }
 
-    async getAllByUserId(userId: string): Promise<ShoppingListProps[]> {
+    getAllByUserId = async (userId: string): Promise<ShoppingListProps[]> => {
         const response = await this.prisma.shoppingList.findMany({
             where: { userId }
         });
 
         return response as ShoppingListProps[];
     }
-    
-    async getByFIlter(filter: object): Promise<ShoppingListProps[]> {
+
+    getByFIlter = async (filter: object): Promise<ShoppingListProps[]> => {
         const response = await this.prisma.shoppingList.findMany({
             where: filter
         });
 
         return response as ShoppingListProps[];
     }
-    
-    async update(params: ParamsUpdateDatabaseClient<ShoppingListProps>): Promise<ShoppingListProps> {
+
+    update = async (params: ParamsUpdateDatabaseClient<ShoppingListProps>): Promise<ShoppingListProps> => {
         const response = await this.prisma.shoppingList.update({
             where: { id: params.id },
             data: params.data
@@ -40,8 +40,8 @@ export class PrismaDatabase implements IDatabaseClient<ShoppingListProps> {
 
         return response as ShoppingListProps;
     }
-    
-    async deleteById(id: string): Promise<void> {
+
+    deleteById = async (id: string): Promise<void> => {
         await this.prisma.shoppingList.delete({
             where: { id }
         });

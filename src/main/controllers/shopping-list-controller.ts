@@ -6,7 +6,7 @@ export class ShoppingListController {
         private shoppingListService: IShoppingList
     ) { };
 
-    async create(req: any, res: any, next: Function) {
+    create = async (req: any, res: any, next: Function) => {
         try {
             const response = await this.shoppingListService.create(req.body);
 
@@ -16,7 +16,7 @@ export class ShoppingListController {
         }
     }
 
-    async getAllByUserId(req: any, res: any, next: Function) {
+    getAllByUserId = async (req: any, res: any, next: Function) => {
         try {
             const response = await this.shoppingListService.getAllByUserId(req.user.id);
 
@@ -26,7 +26,7 @@ export class ShoppingListController {
         }
     }
 
-    async getByName(req: any, res: any, next: Function) {
+    getByName = async (req: any, res: any, next: Function) => {
         try {
             const response = await this.shoppingListService.getByName(req.query.name);
 
@@ -36,7 +36,7 @@ export class ShoppingListController {
         }
     }
 
-    async deleteById(req: any, res: any, next: Function) {
+    deleteById = async (req: any, res: any, next: Function) => {
         try {
             await this.shoppingListService.deleteById(req.params.id);
 
@@ -46,7 +46,7 @@ export class ShoppingListController {
         }
     }
 
-    async deleteAll(req: any, res: any, next: Function) {
+    deleteAll = async (req: any, res: any, next: Function) => {
         try {
             await this.shoppingListService.deleteAll(req.user.id);
 
@@ -56,7 +56,7 @@ export class ShoppingListController {
         }
     }
 
-    async paramsInterceptor(req: any, res: any, next: any) {
+    paramsInterceptor = async (req: any, res: any, next: any) => {
         try {
             await this.shoppingListService.validateItemOwnership(req, res, next);
 
