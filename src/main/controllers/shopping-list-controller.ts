@@ -10,7 +10,10 @@ export class ShoppingListController {
 
     create = async (req: any, res: any, next: Function) => {
         try {
-            const response = await this.shoppingListService.create(req.body);
+            const response = await this.shoppingListService.create({
+                ...req.body,
+                userId: req.userId
+            });
 
             res.status(HttpStatusCode.Created).send(response);
         } catch (error) {
@@ -32,7 +35,7 @@ export class ShoppingListController {
         try {
             const response = await this.shoppingListService.getByName(req.query.name);
 
-            res.status(response ? 200 : 204).send(response);
+            res.status(response.length > 0 ? 200 : 204).send(response);
         } catch (error) {
             next(error);
         }

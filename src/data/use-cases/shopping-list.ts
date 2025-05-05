@@ -30,23 +30,37 @@ export class ShoppingList implements IShoppingList {
     }
 
     getAllByUserId = async (userId: string): Promise<GetAllShoppingListResult> => {
-        const response = await this.getByFilter({ userId }) as Partial<ShoppingListProps>[];
+        try {
+            const response = await this.getByFilter({ userId }) as Partial<ShoppingListProps>[];
 
-        response.forEach(obj => {
-            delete obj.userId;
-        });
+            response.forEach(obj => {
+                delete obj.userId;
+            });
 
-        return response as GetAllShoppingListResult;
+            return response as GetAllShoppingListResult;
+        } catch (error) {
+            if (error instanceof ItemNotFoundError)
+                return [];
+
+            throw error;
+        }
     }
 
     getByName = async (name: string): Promise<GetByNameShoppingListResult> => {
-        const response = await this.getByFilter({ name }) as Partial<ShoppingListProps>[];
+        try {
+            const response = await this.getByFilter({ name }) as Partial<ShoppingListProps>[];
 
-        response.forEach(obj => {
-            delete obj.userId;
-        });
+            response.forEach(obj => {
+                delete obj.userId;
+            });
 
-        return response as GetByNameShoppingListResult;
+            return response as GetByNameShoppingListResult;
+        } catch (error) {
+            if (error instanceof ItemNotFoundError)
+                return [];
+
+            throw error;
+        }
     }
 
     getByFilter = async (filter: object): Promise<GetByFilterShoppingListResult> => {
