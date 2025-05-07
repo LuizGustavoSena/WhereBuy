@@ -2,7 +2,6 @@ import { HttpStatusCode } from "@src/data/protocols/http";
 import { ItemNotFoundError } from "@src/domain/errors";
 import { IShoppingList } from "@src/domain/use-cases";
 import { IShoppingListValidation } from "@src/domain/validations";
-import { Request } from 'express';
 
 export class ShoppingListController {
     constructor(
@@ -35,7 +34,7 @@ export class ShoppingListController {
         }
     }
 
-    getByName = async (req: Request, res: any, next: Function) => {
+    getByName = async (req: any, res: any, next: Function) => {
         try {
             this.validation.getByName(req.query?.name);
 

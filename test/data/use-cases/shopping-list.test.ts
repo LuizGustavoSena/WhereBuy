@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { ShoppingList } from "@src/data/use-cases";
-import { DatabaseError, ItemNotFoundError } from "@src/domain/errors";
+import { DatabaseError } from "@src/domain/errors";
 import { makeCreateShoppingList, makeShoppingListItem } from "@test/domain/mocks/shopping-list";
 import { describe, expect, test, vi } from "vitest";
 import DatabaseSpy from "../protocols/database/mock-database-client";
@@ -25,7 +25,7 @@ const makeSut = (): Props => {
 }
 
 describe('ShoppingList', () => {
-    test('Should be successful create item in list', async() => {
+    test('Should be successful create item in list', async () => {
         const { sut, guid, database } = makeSut();
 
         const newGuid = faker.string.uuid();
@@ -45,7 +45,7 @@ describe('ShoppingList', () => {
         expect(response.id).toBe(newGuid);
     });
 
-    test('Should be error when create item in list', async() => {
+    test('Should be error when create item in list', async () => {
         const { sut, guid } = makeSut();
 
         const request = makeCreateShoppingList();
@@ -57,7 +57,7 @@ describe('ShoppingList', () => {
         await expect(promise).rejects.toThrow(new DatabaseError());
     });
 
-    test('Should be successful getAll', async() => {
+    test('Should be successful getAllByUserId', async () => {
         const { sut, database } = makeSut();
 
         const userId = faker.string.uuid();
@@ -65,7 +65,7 @@ describe('ShoppingList', () => {
 
         database.content = [{ ...item }];
 
-        const response = await sut.getAll(userId);
+        const response = await sut.getAllByUserId(userId);
 
         expect(database.filters.userId).toBe(userId);
 
@@ -78,23 +78,24 @@ describe('ShoppingList', () => {
         expect(response[0].typeAmount).toBe(item.typeAmount);
     });
 
-    test('Should be error when getAll itens', async() => {
+    test('Should be successful when has empty getAllByUserId itens', async () => {
         const { sut } = makeSut();
 
-        const promise = sut.getAll(faker.string.uuid());
+        const response = await sut.getAllByUserId(faker.string.uuid());
 
-        await expect(promise).rejects.toThrow(new DatabaseError());
+        expect(response).toHaveLength(0);
     });
 
-    test('Should be successful getByName', async() => {
+    test('Should be successful getByName', async () => {
         const { sut, database } = makeSut();
 
         const name = faker.commerce.productName();
-        const item = makeShoppingListItem({ name })
+        const userId = faker.string.uuid();
+        const item = makeShoppingListItem({ name, userId })
 
         database.content = [{ ...item }];
 
-        const response = await sut.getByName(name);
+        const response = await sut.getByName({ name, userId });
 
         expect(database.filters.name).toBe(name);
 
@@ -107,27 +108,53 @@ describe('ShoppingList', () => {
         expect(response[0].typeAmount).toBe(item.typeAmount);
     });
 
-    test('Should be error when getByName itens', async() => {
+    test('Should be error when getByName itens', async () => {
         const { sut, database } = makeSut();
 
-        database.content = { };
+        database.getByFIlter = () => { throw new Error('Database error') };
 
-        const promise = sut.getByName(faker.commerce.productName());
+        const promise = sut.getByName({
+            name: faker.commerce.productName(),
+            userId: faker.string.uuid()
+        });
 
         await expect(promise).rejects.toThrow(new DatabaseError());
     });
 
-    test('Should be error when getByName empty', async() => {
+    test('Should be successfull when has empty getByName', async () => {
         const { sut, database } = makeSut();
 
         database.content = [];
 
-        const promise = sut.getByName(faker.commerce.productName());
+        const response = await sut.getByName({
+            name: faker.commerce.productName(),
+            userId: faker.string.uuid()
+        });
 
-        await expect(promise).rejects.toThrow(new ItemNotFoundError());
+        expect(response).toHaveLength(0);
     });
 
-    test('Should be successful deleteById item', async() => {
+    test('Should be successful update item', async () => {
+        const { sut, database } = makeSut();
+
+        const id = faker.string.uuid();
+        const name = faker.commerce.productName();
+        const item = makeShoppingListItem({ id });
+
+        database.content = item;
+
+        const response = await sut.update({
+            id,
+            data: {
+                name
+            }
+        });
+
+        expect(database.params).toEqual({ id, data: { name } });
+        expect(response).not.toHaveProperty('userId');
+    });
+
+    test('Should be successful deleteById item', async () => {
         const { sut, database } = makeSut();
 
         const id = faker.string.uuid();
@@ -137,90 +164,18 @@ describe('ShoppingList', () => {
         expect(database.params).toBe(id);
     });
 
-    test('Should be successful deleteAll item', async() => {
+    test('Should be successful deleteAll item', async () => {
         const { sut, database } = makeSut();
-        
+
         const spy = vi.spyOn(database, 'deleteById');
         const userId = faker.string.uuid();
-        const itens = [ makeShoppingListItem({userId}), makeShoppingListItem({userId}) ];
+        const itens = [makeShoppingListItem({ userId }), makeShoppingListItem({ userId })];
 
-        database.content = [ ...itens ];
+        database.content = [...itens];
 
         await sut.deleteAll(userId);
 
         expect(database.filters.userId).toBe(userId);
         expect(spy).toBeCalledTimes(2);
-    });
-
-    test('Should be successful validateItemOwnership with id', async() => {
-        const { sut, database } = makeSut();
-        var calledCallback = false;
-        const userId = faker.string.uuid();
-        database.content = [ {...makeShoppingListItem({ userId })} ];
-
-        const callback = () => {
-            calledCallback = true;
-        };
-
-        const req = {
-            params: { id: userId },
-            user: { id: userId }
-        }
-
-        await sut.validateItemOwnership(req, {}, callback);
-
-        expect(calledCallback).toBeTruthy();
-    });
-
-    test('Should be error validateItemOwnership with another item id', async() => {
-        const { sut, database } = makeSut();
-        const userId = faker.string.uuid();
-        database.content = [ {...makeShoppingListItem({ userId })} ];
-
-        const req = {
-            params: { id: userId },
-            user: { id: faker.string.uuid() }
-        }
-
-        const promise = sut.validateItemOwnership(req, {}, () => {});
-
-        await expect(promise).rejects.toThrow(new ItemNotFoundError());
-    });
-
-    test('Should be successful validateItemOwnership with query name', async() => {
-        const { sut, database } = makeSut();
-        var calledCallback = false;
-        const name = faker.commerce.productName();
-        const userId = faker.string.uuid();
-        database.content = [ {...makeShoppingListItem({ userId, name })} ];
-
-        const callback = () => {
-            calledCallback = true;
-        };
-
-        const req = {
-            query: { name },
-            user: { id: userId }
-        }
-
-        await sut.validateItemOwnership(req, {}, callback);
-
-        expect(calledCallback).toBeTruthy();
-    });
-
-    test('Should be error validateItemOwnership with another item name', async() => {
-        const { sut, database } = makeSut();
-        const name = faker.commerce.productName();
-        const userId = faker.string.uuid();
-        database.content = [ {...makeShoppingListItem({ userId, name })} ];
-
-        const req = {
-            query: { name },
-            user: { id: faker.string.uuid() }
-        }
-
-        const promise = sut.validateItemOwnership(req, {}, () => {});
-
-        await expect(promise).rejects.toThrow(new ItemNotFoundError());
     });
 });

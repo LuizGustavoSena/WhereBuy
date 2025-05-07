@@ -1,5 +1,5 @@
 import { DatabaseError, ItemNotFoundError } from "@src/domain/errors";
-import { CreateShoppingListProps, CreateShoppingListResponse, GetAllShoppingListResult, GetByFilterShoppingListResult, GetByNameShoppingListProps, GetByNameShoppingListResult, ShoppingListProps } from "@src/domain/models";
+import { CreateShoppingListProps, CreateShoppingListResponse, GetAllShoppingListResult, GetByFilterShoppingListResult, GetByNameShoppingListProps, GetByNameShoppingListResult, ShoppingListProps, UpdateShoppingListProps, UpdateShoppingListResult } from "@src/domain/models";
 import { IShoppingList } from "@src/domain/use-cases";
 import moment from "moment";
 import { IDatabaseClient } from "../protocols/database";
@@ -75,6 +75,18 @@ export class ShoppingList implements IShoppingList {
             if (error instanceof ItemNotFoundError)
                 throw new ItemNotFoundError();
 
+            throw new DatabaseError();
+        }
+    }
+
+    update = async (params: UpdateShoppingListProps): Promise<UpdateShoppingListResult> => {
+        try {
+            const response = await this.dbClient.update(params) as Partial<UpdateShoppingListResult>;
+
+            delete response.userId;
+
+            return response as UpdateShoppingListResult;
+        } catch (error) {
             throw new DatabaseError();
         }
     }

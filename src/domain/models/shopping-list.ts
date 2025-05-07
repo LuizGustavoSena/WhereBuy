@@ -27,3 +27,10 @@ export type GetByNameShoppingListProps = {
 export type GetByNameShoppingListResult = Omit<ShoppingListProps, 'userId'>[];
 
 export type GetByFilterShoppingListResult = ShoppingListProps[];
+
+export type UpdateShoppingListProps = {
+    id: string;
+    data: Partial<Omit<ShoppingListProps, 'id' | 'created' | 'userId'>>
+};
+
+export type UpdateShoppingListResult = ShoppingListProps;
