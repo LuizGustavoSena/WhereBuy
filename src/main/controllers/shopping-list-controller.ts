@@ -1,16 +1,20 @@
 import { HttpStatusCode } from "@src/data/protocols/http";
 import { ItemNotFoundError } from "@src/domain/errors";
 import { IShoppingList } from "@src/domain/use-cases";
+import { IShoppingListValidation } from "@src/domain/validations";
 import { Request } from 'express';
 
 export class ShoppingListController {
     constructor(
-        private shoppingListService: IShoppingList
+        private service: IShoppingList,
+        private validation: IShoppingListValidation
     ) { };
 
     create = async (req: any, res: any, next: Function) => {
         try {
-            const response = await this.shoppingListService.create({
+            this.validation.create(req.body);
+
+            const response = await this.service.create({
                 ...req.body,
                 userId: req.userId
             });
@@ -23,7 +27,7 @@ export class ShoppingListController {
 
     getAllByUserId = async (req: any, res: any, next: Function) => {
         try {
-            const response = await this.shoppingListService.getAllByUserId(req.userId);
+            const response = await this.service.getAllByUserId(req.userId);
 
             res.status(response.length > 0 ? HttpStatusCode.Ok : HttpStatusCode.NoContent).send(response);
         } catch (error) {
@@ -33,7 +37,9 @@ export class ShoppingListController {
 
     getByName = async (req: Request, res: any, next: Function) => {
         try {
-            const response = await this.shoppingListService.getByName({
+            this.validation.getByName(req.query?.name);
+
+            const response = await this.service.getByName({
                 name: req.query.name as string,
                 userId: req.userId
             });
@@ -46,7 +52,9 @@ export class ShoppingListController {
 
     deleteById = async (req: any, res: any, next: Function) => {
         try {
-            await this.shoppingListService.deleteById(req.params.id);
+            this.validation.deleteById(req.params.id);
+
+            await this.service.deleteById(req.params.id);
 
             res.status(HttpStatusCode.Ok).send();
         } catch (error) {
@@ -56,7 +64,7 @@ export class ShoppingListController {
 
     deleteAll = async (req: any, res: any, next: Function) => {
         try {
-            await this.shoppingListService.deleteAll(req.userId);
+            await this.service.deleteAll(req.userId);
 
             res.status(HttpStatusCode.Ok).send();
         } catch (error) {
@@ -65,7 +73,7 @@ export class ShoppingListController {
     }
 
     paramsInterceptor = async (req: any, res: any, next: any) => {
-        const item = await this.shoppingListService.getByFilter({ id: req.params?.id });
+        const item = await this.service.getByFilter({ id: req.params?.id });
 
         const isOwn = item.find(el => el.userId === req.userId);
 
