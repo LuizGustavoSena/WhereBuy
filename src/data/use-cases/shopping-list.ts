@@ -1,5 +1,5 @@
 import { DatabaseError, ItemNotFoundError } from "@src/domain/errors";
-import { CreateShoppingListProps, CreateShoppingListResponse, GetAllShoppingListResult, GetByFilterShoppingListResult, GetByNameShoppingListResult, ShoppingListProps } from "@src/domain/models";
+import { CreateShoppingListProps, CreateShoppingListResponse, GetAllShoppingListResult, GetByFilterShoppingListResult, GetByNameShoppingListProps, GetByNameShoppingListResult, ShoppingListProps } from "@src/domain/models";
 import { IShoppingList } from "@src/domain/use-cases";
 import moment from "moment";
 import { IDatabaseClient } from "../protocols/database";
@@ -46,9 +46,9 @@ export class ShoppingList implements IShoppingList {
         }
     }
 
-    getByName = async (name: string): Promise<GetByNameShoppingListResult> => {
+    getByName = async (params: GetByNameShoppingListProps): Promise<GetByNameShoppingListResult> => {
         try {
-            const response = await this.getByFilter({ name }) as Partial<ShoppingListProps>[];
+            const response = await this.getByFilter(params) as Partial<ShoppingListProps>[];
 
             response.forEach(obj => {
                 delete obj.userId;

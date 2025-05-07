@@ -1,7 +1,7 @@
 import { HttpStatusCode } from "@src/data/protocols/http";
 import { ItemNotFoundError } from "@src/domain/errors";
-import { validateItemOwnershipFilter } from "@src/domain/models";
 import { IShoppingList } from "@src/domain/use-cases";
+import { Request } from 'express';
 
 export class ShoppingListController {
     constructor(
@@ -31,9 +31,12 @@ export class ShoppingListController {
         }
     }
 
-    getByName = async (req: any, res: any, next: Function) => {
+    getByName = async (req: Request, res: any, next: Function) => {
         try {
-            const response = await this.shoppingListService.getByName(req.query.name);
+            const response = await this.shoppingListService.getByName({
+                name: req.query.name as string,
+                userId: req.userId
+            });
 
             res.status(response.length > 0 ? HttpStatusCode.Ok : HttpStatusCode.NoContent).send(response);
         } catch (error) {
@@ -62,16 +65,9 @@ export class ShoppingListController {
     }
 
     paramsInterceptor = async (req: any, res: any, next: any) => {
-        const idParam = Number(req.params?.id);
+        const item = await this.shoppingListService.getByFilter({ id: req.params?.id });
 
-        var filter: validateItemOwnershipFilter = { id: idParam };
-
-        if (isNaN(idParam))
-            filter = { name: req.query?.name };
-
-        const item = await this.shoppingListService.getByFilter(filter);
-
-        const isOwn = item.find(el => el.userId === req.user.id);
+        const isOwn = item.find(el => el.userId === req.userId);
 
         if (isOwn)
             return next();
