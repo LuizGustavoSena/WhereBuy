@@ -49,6 +49,19 @@ export class ShoppingListController {
         }
     }
 
+    update = async (req: any, res: any, next: Function) => {
+        try {
+            const response = await this.service.update({
+                id: req.params.id,
+                data: req.body
+            });
+
+            res.status(HttpStatusCode.Ok).send(response);
+        } catch (error) {
+            next(error);
+        }
+    }
+
     deleteById = async (req: any, res: any, next: Function) => {
         try {
             this.validation.deleteById(req.params.id);

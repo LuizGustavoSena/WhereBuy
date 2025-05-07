@@ -16,6 +16,8 @@ router.get('/', (req, res, next) => {
     return shoppingListController[nameFunction](req, res, next);
 });
 
+router.patch('/:id', shoppingListController.update);
+
 router.delete('/:id', shoppingListController.deleteById);
 router.delete('/', shoppingListController.deleteAll);
 
