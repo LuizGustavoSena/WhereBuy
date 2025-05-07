@@ -1,35 +1,35 @@
 import { ValidationError } from "@src/domain/errors";
-import { CreateShoppingListProps, TypeAmountEnum } from "@src/domain/models";
+import { TypeAmountEnum } from "@src/domain/models";
 import { IShoppingListValidation, ShoppingListMessageRequire, ShoppingListMessageType } from "@src/domain/validations";
 import { z, ZodError } from "zod";
 
 export class ZodShoppingListValidation implements IShoppingListValidation {
-    constructor(){};
+    constructor() { };
 
-    create(params: CreateShoppingListProps): void {
+    create(data: any): void {
         const validation = z.object({
-            name: z.string({required_error: ShoppingListMessageRequire.NAME, invalid_type_error: ShoppingListMessageType.NAME }),
+            name: z.string({ required_error: ShoppingListMessageRequire.NAME, invalid_type_error: ShoppingListMessageType.NAME }),
             amount: z.number({ required_error: ShoppingListMessageRequire.AMOUNT, invalid_type_error: ShoppingListMessageType.AMOUNT }),
             typeAmount: z.nativeEnum(TypeAmountEnum, { required_error: ShoppingListMessageRequire.TYPE_AMOUNT, invalid_type_error: ShoppingListMessageType.TYPE_AMOUNT })
         });
 
-        this.throwValidationError(() => validation.parse(params));
+        this.throwValidationError(() => validation.parse(data));
     }
 
-    getByName(name: string): void {
+    getByName(data: any): void {
         const validation = z.string({ required_error: ShoppingListMessageRequire.NAME, invalid_type_error: ShoppingListMessageType.NAME });
 
-        this.throwValidationError(() => validation.parse(name));
+        this.throwValidationError(() => validation.parse(data));
     }
 
-    deleteById(id: string): void {
+    deleteById(data: any): void {
         const validation = z.string({ required_error: ShoppingListMessageRequire.ID, invalid_type_error: ShoppingListMessageType.ID })
             .uuid({ message: ShoppingListMessageType.ID });
 
-        this.throwValidationError(() => validation.parse(id));
+        this.throwValidationError(() => validation.parse(data));
     }
 
-    private throwValidationError(callback: Function){
+    private throwValidationError(callback: Function) {
         try {
             callback();
         } catch (error: any) {

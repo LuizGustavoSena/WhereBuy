@@ -1,4 +1,3 @@
-import { CreateShoppingListProps } from "../models";
 
 export enum ShoppingListMessageRequire {
     ID = 'O campo id deve ser preenchido',
@@ -14,7 +13,7 @@ export enum ShoppingListMessageType {
     TYPE_AMOUNT = 'Tipo não reconhecido por typeAmount'
 }
 export interface IShoppingListValidation {
-    create(params: CreateShoppingListProps): void;
-    getByName(name: string): void;
-    deleteById(id: string): void;
+    create(data: any): void;
+    getByName(data: any): void;
+    deleteById(data: any): void;
 }
