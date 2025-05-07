@@ -25,7 +25,7 @@ export class ShoppingListController {
         try {
             const response = await this.shoppingListService.getAllByUserId(req.userId);
 
-            res.status(response.length > 0 ? 200 : 204).send(response);
+            res.status(response.length > 0 ? HttpStatusCode.Ok : HttpStatusCode.NoContent).send(response);
         } catch (error) {
             next(error);
         }
@@ -35,7 +35,7 @@ export class ShoppingListController {
         try {
             const response = await this.shoppingListService.getByName(req.query.name);
 
-            res.status(response.length > 0 ? 200 : 204).send(response);
+            res.status(response.length > 0 ? HttpStatusCode.Ok : HttpStatusCode.NoContent).send(response);
         } catch (error) {
             next(error);
         }
@@ -45,7 +45,7 @@ export class ShoppingListController {
         try {
             await this.shoppingListService.deleteById(req.params.id);
 
-            res.status(200).send();
+            res.status(HttpStatusCode.Ok).send();
         } catch (error) {
             next(error);
         }
@@ -55,7 +55,7 @@ export class ShoppingListController {
         try {
             await this.shoppingListService.deleteAll(req.userId);
 
-            res.status(200).send();
+            res.status(HttpStatusCode.Ok).send();
         } catch (error) {
             next(error);
         }
