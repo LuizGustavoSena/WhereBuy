@@ -5,6 +5,10 @@ const router = express.Router();
 
 const shoppingListController = makeShoppingListController();
 
+router.param('id', shoppingListController.paramsInterceptor);
+
+router.post('/', shoppingListController.create);
+
 router.get('/', (req, res, next) => {
     const nameFunction = req.query.name ?
         'getByName' : 'getAllByUserId';
@@ -12,6 +16,7 @@ router.get('/', (req, res, next) => {
     return shoppingListController[nameFunction](req, res, next);
 });
 
-router.post('/', shoppingListController.create);
+router.delete('/:id', shoppingListController.deleteById);
+router.delete('/', shoppingListController.deleteAll);
 
 export default router;
