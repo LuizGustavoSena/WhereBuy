@@ -2,7 +2,7 @@ import { makeValidationToken } from '../factories/use-cases';
 
 const validationTokenService = makeValidationToken();
 
-const authentication = async (req: any, res: any, next: any) => {
+export const authentication = async (req: any, res: any, next: any) => {
     const { authorization } = req.headers;
 
     if (!authorization || !authorization.split(' ')[1])
@@ -18,5 +18,3 @@ const authentication = async (req: any, res: any, next: any) => {
         return res.status(401).send();
     }
 }
-
-export default authentication;
