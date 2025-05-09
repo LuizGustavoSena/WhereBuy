@@ -38,7 +38,7 @@ describe('ZodShoppingListValidation', () => {
     test('Should be error whit another type name create method', () => {
         const sut = makeSut();
         // @ts-expect-error
-        const request = makeCreateShoppingList({name: faker.number.int()});
+        const request = makeCreateShoppingList({ name: faker.number.int() });
 
         expect(() => sut.create(request)).toThrow(new ValidationError(ShoppingListMessageType.NAME));
     });
@@ -46,7 +46,7 @@ describe('ZodShoppingListValidation', () => {
     test('Should be error whit another type amount create method', () => {
         const sut = makeSut();
         // @ts-expect-error
-        const request = makeCreateShoppingList({ amount: faker.string.sample()});
+        const request = makeCreateShoppingList({ amount: faker.string.sample() });
 
         expect(() => sut.create(request)).toThrow(new ValidationError(ShoppingListMessageType.AMOUNT));
     });
@@ -59,8 +59,17 @@ describe('ZodShoppingListValidation', () => {
 
     test('Should be error whit another name type getByName method', () => {
         const sut = makeSut();
-        // @ts-expect-error
+
         expect(() => sut.getByName(faker.number.int())).toThrow(new ValidationError(ShoppingListMessageType.NAME));
+    });
+
+    test('Should be error whit another id type update method', () => {
+        const sut = makeSut();
+
+        expect(() => sut.update({
+            id: faker.number.int(),
+            data: {}
+        })).toThrow(new ValidationError(ShoppingListMessageType.ID));
     });
 
     test('Should be error whitout id deleteById method', () => {
@@ -71,7 +80,7 @@ describe('ZodShoppingListValidation', () => {
 
     test('Should be error whit another id type deleteById method', () => {
         const sut = makeSut();
-        // @ts-expect-error
+
         expect(() => sut.deleteById(faker.number.int())).toThrow(new ValidationError(ShoppingListMessageType.ID));
     });
 })
