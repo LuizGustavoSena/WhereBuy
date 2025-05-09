@@ -81,6 +81,15 @@ describe('ZodShoppingListValidation', () => {
         })).toThrow(new ValidationError(ShoppingListMessageType.NAME));
     });
 
+    test('Should be error whit another amount type update method', () => {
+        const sut = makeSut();
+
+        expect(() => sut.update({
+            id: faker.string.uuid(),
+            data: { amount: faker.string.numeric() }
+        })).toThrow(new ValidationError(ShoppingListMessageType.AMOUNT));
+    });
+
     test('Should be error whitout id deleteById method', () => {
         const sut = makeSut();
         // @ts-expect-error
