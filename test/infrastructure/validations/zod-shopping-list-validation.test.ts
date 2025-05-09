@@ -68,7 +68,7 @@ describe('ZodShoppingListValidation', () => {
 
         expect(() => sut.update({
             id: faker.number.int(),
-            data: {}
+            data: { name: faker.commerce.productName() }
         })).toThrow(new ValidationError(ShoppingListMessageType.ID));
     });
 
@@ -88,6 +88,15 @@ describe('ZodShoppingListValidation', () => {
             id: faker.string.uuid(),
             data: { amount: faker.string.numeric() }
         })).toThrow(new ValidationError(ShoppingListMessageType.AMOUNT));
+    });
+
+    test('Should be error whit another typeAmount type update method', () => {
+        const sut = makeSut();
+
+        expect(() => sut.update({
+            id: faker.string.uuid(),
+            data: { typeAmount: faker.commerce.productName() }
+        })).toThrow(new ValidationError(ShoppingListMessageType.TYPE_AMOUNT));
     });
 
     test('Should be error whitout id deleteById method', () => {
