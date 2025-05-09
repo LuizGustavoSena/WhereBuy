@@ -15,5 +15,6 @@ export enum ShoppingListMessageType {
 export interface IShoppingListValidation {
     create(data: any): void;
     getByName(data: any): void;
+    update(data: any): void;
     deleteById(data: any): void;
 }
