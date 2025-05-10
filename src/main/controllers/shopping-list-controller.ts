@@ -51,6 +51,11 @@ export class ShoppingListController {
 
     update = async (req: any, res: any, next: Function) => {
         try {
+            this.validation.update({
+                id: req.params.id,
+                data: req.body
+            });
+
             const response = await this.service.update({
                 id: req.params.id,
                 data: req.body
