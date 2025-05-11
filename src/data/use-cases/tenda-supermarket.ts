@@ -16,13 +16,14 @@ export class TendaSupermarket implements ISupermarket {
             url: `https://api.tendaatacado.com.br/api/public/store/search?query=${name}`,
         });
 
-        if(response.statusCode !== HttpStatusCode.Ok)
+        if (response.statusCode !== HttpStatusCode.Ok)
             throw new GetProductsError('Tenda');
 
         const products = response.body?.products.map(el => ({
             name: el.name,
             price: el.price,
-            urlPhoto: el.thumbnail
+            urlPhoto: el.thumbnail,
+            supermarket: 'Tenda Atacado'
         })) as Product[];
 
         return products;

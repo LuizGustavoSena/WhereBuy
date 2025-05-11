@@ -1,9 +1,10 @@
+import { Product } from "./product";
+
 export type renderListByUserIdResponse = {
-    products: Product[];
+    products: Products[];
 }
 
-type Product = {
+type Products = {
     name: string;
-    price: number;
-    supermarket: string;
+    products: Product[];
 }
