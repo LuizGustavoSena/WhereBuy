@@ -5,7 +5,8 @@ export enum HttpStatusCode {
     NotFound = 404,
     ServerError = 500,
     Unauthorized = 401,
-    Created = 201
+    Created = 201,
+    ServiceUnavailable = 503
 };
 
 export type HttpRequest = {
