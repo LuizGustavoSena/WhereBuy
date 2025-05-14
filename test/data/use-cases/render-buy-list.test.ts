@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { RenderBuyList } from "@src/data/use-cases";
+import { RenderBuyListError } from "@src/domain/errors";
 import { ISupermarket } from "@src/domain/use-cases";
 import { makeShoppingListItem } from "@test/domain/mocks/shopping-list";
 import { mockProducts, TendaSupermarketSpy } from "@test/domain/mocks/tenda";
@@ -42,5 +43,15 @@ describe('RenderBuyList', () => {
             name: shoppingList[0].name
         });
         expect(response.products[0].products).toEqual(supermarketList);
+    });
+
+    test('Should be error when throw database error', async () => {
+        const { sut, database } = makeSut();
+
+        database.getAllByUserId = async () => { throw new Error('Database Error') };
+
+        const promise = sut.renderListByUserId(faker.string.uuid());
+
+        await expect(promise).rejects.toThrow(new RenderBuyListError());
     });
 });
