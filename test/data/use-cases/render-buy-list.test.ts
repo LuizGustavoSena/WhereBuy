@@ -54,4 +54,14 @@ describe('RenderBuyList', () => {
 
         await expect(promise).rejects.toThrow(new RenderBuyListError());
     });
+
+    test('Should be error when throw supermarket api error', async () => {
+        const { sut, supermarket } = makeSut();
+
+        supermarket.getProductByName = async () => { throw new Error('Api Error') };
+
+        const promise = sut.renderListByUserId(faker.string.uuid());
+
+        await expect(promise).rejects.toThrow(new RenderBuyListError());
+    });
 });
