@@ -5,7 +5,8 @@ const envSchema = z.object({
     NODE_ENV: z.enum(['development', 'test', 'production']),
     DATABASE_URL: z.string(),
     PORT: z.coerce.number().default(3000),
-    AUTHENTICATION_URL: z.string()
+    AUTHENTICATION_URL: z.string(),
+    URLS_ENABLE_CORS: z.string().default('')
 });
 
 const _env = envSchema.safeParse(process.env);

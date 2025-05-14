@@ -1,3 +1,4 @@
+export * from './cors';
 export * from './errorHandler';
 export * from './protected-router';
 export * from './rate-limit';
