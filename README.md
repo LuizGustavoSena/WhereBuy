@@ -1,7 +1,7 @@
 # Where Buy
 
 <div align="center">
-<img height="400" src="assets/WhereBuy.png" />
+<img height="400" src="https://github.com/LuizGustavoSena/WhereBuy/blob/main/assets/WhereBuy.png" />
 </div>
 </br>
 It's a API for create shopping items and render calculate list more cheap by supermarkets on your city.
