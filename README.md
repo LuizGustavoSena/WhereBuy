@@ -21,8 +21,8 @@ It's a API for create shopping items and render calculate list more cheap by sup
 <div style="display: inline_block">
     <img height="40" width="50" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg" />
     <img height="40" width="50" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg" />
-    <img height="40" width="50" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/express/express-original.svg" style="filter: invert(1)"/>
-    <img height="40" width="50" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/prisma/prisma-original.svg" style="filter: invert(1)" />
+    <img height="40" width="50" src="https://raw.githubusercontent.com/LuizGustavoSena/WhereBuy/refs/heads/main/assets/express.png" />
+    <img height="40" width="50" src="https://raw.githubusercontent.com/LuizGustavoSena/WhereBuy/refs/heads/main/assets/prisma.png" />
     <img height="40" width="50"src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg" />
     <img height="40" width="50" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vitest/vitest-original.svg" />
 </div>
