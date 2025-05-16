@@ -6,7 +6,11 @@ const envSchema = z.object({
     DATABASE_URL: z.string(),
     PORT: z.coerce.number().default(3000),
     AUTHENTICATION_URL: z.string(),
-    URLS_ENABLE_CORS: z.string().default('')
+    URLS_ENABLE_CORS: z.preprocess(el => {
+        if (typeof el === 'string')
+            return el.split(',');
+        return el;
+    }, z.array(z.string())).default([])
 });
 
 const _env = envSchema.safeParse(process.env);
