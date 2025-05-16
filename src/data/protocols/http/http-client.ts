@@ -6,7 +6,8 @@ export enum HttpStatusCode {
     ServerError = 500,
     Unauthorized = 401,
     Created = 201,
-    ServiceUnavailable = 503
+    ServiceUnavailable = 503,
+    PayloadTooLarge = 413
 };
 
 export type HttpRequest = {

@@ -1,6 +1,6 @@
 import express, { Response } from 'express';
 import helmet from 'helmet';
-import { authentication, configurationCors, errorHandler, rateLimiter, tooBusyCheck } from './middlewares';
+import { authentication, checkContentLength, configurationCors, errorHandler, rateLimiter, tooBusyCheck } from './middlewares';
 import RenderBuyListRouter from './routes/render-buy-list-route';
 import ShoppingListRouter from './routes/shopping-list-route';
 
@@ -12,6 +12,7 @@ app.use(helmet());
 app.use(tooBusyCheck);
 app.use(rateLimiter);
 app.use(configurationCors);
+app.use(checkContentLength);
 
 protectedRouter.use('/shopping-list', ShoppingListRouter);
 protectedRouter.use('/render-buy-list', RenderBuyListRouter);
